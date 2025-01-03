@@ -1,0 +1,41 @@
+Synthetic Header Trace Generator (trace_generator)
+Atlantis Young
+
+DISCLAIMER:
+This code is freely available for academic, non-commercial research and educational purposes.
+The author is NOT liable for ANYTHING.
+This code is provided with absolutely NO GUARANTEE or WARRANTY.
+
+This tool generates a list of packet headers to probe the input filter set.
+Entries in the output header trace have the following format (packet header fields are unsigned integers):
+
+<Source Address>	<Destination Address>	<Source Port>	<Destination Port>	<Protocol>	<Filter Number>
+
+The Filter Number simply records the filter used to generate the header.
+This may NOT be the best-matching (or first-matching) filter for the packet header.
+The user must independently verify the correctness of their search engine.
+The tool provides control over the size of the trace and the locality of reference of the trace.
+
+COMPILE:
+make all
+
+USAGE:
+./trace_generator <Pareto parameter a> <Pareto parameter b> <scale> <filter set filename>
+
+Pareto parameters are used to control locality of reference.
+Pareto cummulative density function: D(x) = 1 - (b/x)^a
+	Examples:
+	No locality of reference, a = 1, b = 0
+	Low locality of reference, a = 1, b = 0.0001
+	High locality of reference, a = 1, b = 1
+Scale parameter limits the size of the trace
+	Threshold = (# of filters in filter set) * scale
+	Once the size of the trace exceeds the threshold, the generator terminates
+	Note that a large burst near the end of the process may cause the trace to be considerably larger than the Threshold
+
+EXAMPLE:
+./trace_generator 1 0.1 10 MyFilters
+
+OUTPUT:
+<filter set filename>_trace
+This file will contain a list of header entries in the previous defined format.
