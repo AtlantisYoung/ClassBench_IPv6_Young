@@ -24,13 +24,13 @@ int header_gen(int d, FilterList *filters, FILE *fp, float a, float b, int scale
                 fprintf(fp, "%lu\t%lu\t",
                         new_hdr->sa.lower(), new_hdr->da.lower());
             } else if (new_hdr->sa.upper() != 0 && new_hdr->da.upper() == 0) {
-                fprintf(fp, "%lu%lu\t%lu\t",
+                fprintf(fp, "%lu%020lu\t%lu\t",
                         new_hdr->sa.upper(), new_hdr->sa.lower(), new_hdr->da.lower());
             } else if (new_hdr->sa.upper() == 0 && new_hdr->da.upper() != 0) {
-                fprintf(fp, "%lu\t%lu%lu\t",
+                fprintf(fp, "%lu\t%lu%020lu\t",
                         new_hdr->sa.lower(), new_hdr->da.upper(), new_hdr->da.lower());
             } else {
-                fprintf(fp, "%lu%lu\t%lu\t",
+                fprintf(fp, "%lu%020lu\t%lu%020lu\t",
                         new_hdr->sa.upper(), new_hdr->sa.lower(), new_hdr->da.upper(), new_hdr->da.lower());
             }
 
@@ -49,12 +49,20 @@ void random_corner(int RandFilt, FilterList *filters, struct header *new_hdr) {
     int d = TUPLE; double p;
     FilterList_item *filter = (*filters)(RandFilt);
     struct filter filter_t = filter->filt;
-    new_hdr->sa = (drand48() < 0.5) ?
+
+    p = drand48();
+    new_hdr->sa = (p < 0.5) ?
                   low(filter_t.sa, filter_t.sa_len) :
                   high(filter_t.sa, filter_t.sa_len);
+    // std::cout << filter_t.sa << "  " << filter_t.sa_len << std::endl;
+    // std::cout << "sa: " << new_hdr->sa << "\n" << std::endl;
+
+    p = drand48();
     new_hdr->da = (drand48() < 0.5) ?
                   low(filter_t.da, filter_t.da_len) :
                   high(filter_t.da, filter_t.da_len);
+    // std::cout << filter_t.da << "  " << filter_t.da_len << std::endl;
+    // std::cout << "da: " << new_hdr->da << "\n" << std::endl;
     
     new_hdr->sp = randint(filter_t.sp[0], filter_t.sp[1]);
     new_hdr->dp = randint(filter_t.dp[0], filter_t.dp[1]);

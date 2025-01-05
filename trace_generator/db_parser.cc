@@ -66,8 +66,13 @@ int read_filters(FilterList *filters, FILE *fp_in) {
                              temp_addr[4] | temp_addr[5] | temp_addr[6] | temp_addr[7] |
                              temp_addr[8] | temp_addr[9] | temp_addr[10]| temp_addr[11]|
                              temp_addr[12]| temp_addr[13]| temp_addr[14]| temp_addr[15];
-            for (int part = 40; part < (int)source.size(); part++) {
-                temp_filter.sa_len += pow(10, (int)source.size()-1-part) * (source[part]-'0');
+            
+            for (int i = 0; i < strlen(string_buffers[0]); i++) {
+                if (string_buffers[0][i] == '/') {
+                    for (int j = i+1; j < strlen(string_buffers[0]); j++) {
+                        temp_filter.sa_len += pow(10, strlen(string_buffers[0])-1-j) * (string_buffers[0][j]-'0');
+                    } break;
+                }
             } dtemp++;
             // std::cout << temp_filter.sa << " / " << temp_filter.sa_len << std::endl;
             
@@ -85,8 +90,13 @@ int read_filters(FilterList *filters, FILE *fp_in) {
                              temp_addr[4] | temp_addr[5] | temp_addr[6] | temp_addr[7] |
                              temp_addr[8] | temp_addr[9] | temp_addr[10]| temp_addr[11]|
                              temp_addr[12]| temp_addr[13]| temp_addr[14]| temp_addr[15];
-            for (int part = 40; part < (int)destination.size(); part++) {
-                temp_filter.da_len += pow(10, (int)destination.size()-1-part) * (destination[part]-'0');
+            
+            for (int i = 0; i < strlen(string_buffers[1]); i++) {
+                if (string_buffers[1][i] == '/') {
+                    for (int j = i+1; j < strlen(string_buffers[1]); j++) {
+                        temp_filter.da_len += pow(10, strlen(string_buffers[1])-1-j) * (string_buffers[1][j]-'0');
+                    } break;
+                }
             } dtemp++;
             // std::cout << temp_filter.da << " / " << temp_filter.da_len << std::endl;
 
